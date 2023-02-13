@@ -52,6 +52,9 @@ table {
 }
 body {
   font-family: 'Open Sans', sans-serif;
+  max-width: 480px;
+  margin: 0px auto;
+  background-color: #92A8D1
   
   
 }

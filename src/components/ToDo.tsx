@@ -1,44 +1,74 @@
-import { useSetRecoilState } from "recoil";
-import { Categories, IToDo, toDoState } from "./atom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import styled from "styled-components";
+import { IToDo, categoryState, toDoState } from "./atom";
+
+const List = styled.li`
+  list-style-type: none;
+`;
+
+const Button = styled.button`
+  font-weight: 700;
+  padding: 1px 6px;
+  background-color: white;
+  border: 0;
+  border-radius: 10px;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const Span = styled.span`
+  font-weight: 800;
+  font-size: 23px;
+`;
 
 function ToDo({ text, category, id }: IToDo) {
-  const setToDos = useSetRecoilState(toDoState);
-  const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const {
-      currentTarget: { name },
-    } = event;
-    setToDos((prev) => {
-      const targetIndex = prev.findIndex((prev1) => prev1.id === id);
-      const newToDo = { text, id, category: name as any };
+  const [toDo, setToDos] = useRecoilState(toDoState);
+  const setCategory = useSetRecoilState(categoryState);
 
+  const onClick = (event: any) => {
+    const minji = event.currentTarget.name;
+    setToDos((prev) => {
+      const currentIndex = prev.findIndex((p) => p.id === id);
+      const newToDo = { text, id, category: minji as any };
       return [
-        ...prev.slice(0, targetIndex),
+        ...prev.slice(0, currentIndex),
         newToDo,
-        ...prev.slice(targetIndex + 1),
+        ...prev.slice(currentIndex + 1),
       ];
     });
   };
 
-  return (
-    <li>
-      {text}
+  const onDelete = (event: any) => {
+    console.log("value", id);
+    console.log("toDo", toDo);
+    setToDos((prev) => {
+      const currentIndex = prev.findIndex((value) => value.id === id);
+      console.log(currentIndex);
+      return [...prev.slice(0, currentIndex), ...prev.slice(currentIndex + 1)];
+    });
+  };
 
-      {category !== Categories.DOING && (
-        <button name={Categories.DOING} onClick={onClick}>
-          DOING
-        </button>
-      )}
-      {category !== Categories.TO_DO && (
-        <button name={Categories.TO_DO} onClick={onClick}>
+  return (
+    <List key={id}>
+      <Span>{text}</Span>
+      {category !== "TO_DO" && (
+        <Button onClick={onClick} name="TO_DO">
           TO_DO
-        </button>
+        </Button>
       )}
-      {category !== Categories.DONE && (
-        <button name={Categories.DONE} onClick={onClick}>
+      {category !== "DOING" && (
+        <Button onClick={onClick} name="DOING">
+          DOING
+        </Button>
+      )}
+      {category !== "DONE" && (
+        <Button onClick={onClick} name="DONE">
           DONE
-        </button>
+        </Button>
       )}
-    </li>
+      <Button onClick={onDelete}>❌</Button>
+    </List>
   );
 }
 

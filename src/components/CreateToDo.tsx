@@ -1,31 +1,46 @@
 import { useForm } from "react-hook-form";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { toDoState, IToDo, categoryState } from "./atom";
-interface IFormData {
-  toDo: string;
-}
+import { useRecoilState } from "recoil";
+import styled from "styled-components";
+import { categoryState, toDoState } from "./atom";
+
+const Input = styled.input`
+  padding: 5px 15px;
+  text-align: center;
+  font-weight: 800;
+  border-radius: 10px;
+  border: 0px;
+  &:focus {
+    outline: none;
+  }
+`;
+
+const Button = styled.button`
+  font-weight: 700;
+  padding: 2px 15px;
+  background-color: white;
+  border: 0;
+  &:hover {
+    cursor: pointer;
+  }
+`;
 
 function CreateToDo() {
-  const setToDos = useSetRecoilState<IToDo[]>(toDoState);
-  const currentCategory = useRecoilValue(categoryState);
+  const [category, setCategory] = useRecoilState(categoryState);
 
-  const { register, handleSubmit, setValue } = useForm<IFormData>();
-  const onValid = ({ toDo }: IFormData) => {
-    setToDos((prev) => [
-      { text: toDo, id: Date.now(), category: currentCategory },
-      ...prev,
-    ]);
+  const [toDos, setToDos] = useRecoilState(toDoState);
+  const { register, handleSubmit, setValue } = useForm();
+  const handleValid = ({ toDo }: any) => {
     setValue("toDo", "");
+    setToDos((prev) => [{ text: toDo, id: Date.now(), category }, ...prev]);
   };
+
   return (
-    <form onSubmit={handleSubmit(onValid)}>
-      <input
-        {...register("toDo", {
-          required: "required",
-        })}
-        placeholder="Write a To Do"
-      />
-      <button>Submit</button>
+    <form onSubmit={handleSubmit(handleValid)}>
+      <Input
+        {...register("toDo", { required: "To Do is Required" })}
+        placeholder="Write a To Do..."
+      ></Input>
+      <Button>Submit</Button>
     </form>
   );
 }
