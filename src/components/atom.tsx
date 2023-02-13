@@ -12,6 +12,15 @@ export interface IToDo {
   category: "TO_DO" | "DOING" | "DONE";
 }
 
+export interface IData {
+  option: string;
+}
+
+export const optionState = atom<IData[]>({
+  key: "option",
+  default: [],
+});
+
 export const toDoState = atom<IToDo[]>({
   key: "ToDo",
   default: [],

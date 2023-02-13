@@ -6,7 +6,7 @@ import {
   useRecoilValue,
   useSetRecoilState,
 } from "recoil";
-import { categoryState, toDoSelector } from "./atom";
+import { categoryState, IData, optionState, toDoSelector } from "./atom";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 import styled from "styled-components";
@@ -33,14 +33,19 @@ const Select = styled.select`
 `;
 
 function ToDoList() {
-  const setCategory = useSetRecoilState(categoryState);
+  const [category, setCategory] = useRecoilState(categoryState);
+  const { register, handleSubmit, setValue } = useForm();
+  const [option, setOption] = useRecoilState(optionState);
 
   const filteredToDos = useRecoilValue(toDoSelector);
 
   const onInput = (event: any) => {
     setCategory(event.currentTarget.value);
   };
-
+  const onValid = ({ option }: any) => {
+    setValue("option", "");
+    setOption((prev) => [{ option }, ...prev]);
+  };
   return (
     <Container>
       <H1>To Do Program</H1>
@@ -49,7 +54,14 @@ function ToDoList() {
         <option value="TO_DO">TO_DO</option>
         <option value="DOING">DOING</option>
         <option value="DONE">DONE</option>
+        {option.map((p) => (
+          <option value={p.option}>{p.option}</option>
+        ))}
       </Select>
+      <form onSubmit={handleSubmit(onValid as any)}>
+        <input {...register("option")} placeholder="New Category" />
+        <button>Create New Category</button>
+      </form>
 
       <CreateToDo />
 
