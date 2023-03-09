@@ -1,6 +1,6 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { IToDo, categoryState, toDoState, IData, optionState } from "./atom";
+import { IToDo, categoryState, toDoState, optionState } from "./atom";
 
 const List = styled.li`
   list-style-type: none;
@@ -23,8 +23,8 @@ const Span = styled.span`
 `;
 
 function ToDo({ text, category, id }: IToDo) {
-  const [toDo, setToDos] = useRecoilState(toDoState);
-  const [category1, setCategory] = useRecoilState(categoryState);
+  const setToDos = useSetRecoilState(toDoState);
+  const category1 = useRecoilValue(categoryState);
   const options = useRecoilValue(optionState);
 
   const onClick = (event: any) => {
@@ -41,9 +41,7 @@ function ToDo({ text, category, id }: IToDo) {
     });
   };
 
-  const onDelete = (event: any) => {
-    console.log("value", id);
-    console.log("toDo", toDo);
+  const onDelete = () => {
     setToDos((prev) => {
       const currentIndex = prev.findIndex((value) => value.id === id);
       console.log(currentIndex);

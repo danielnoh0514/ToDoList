@@ -12,11 +12,11 @@ export interface IToDo {
   category: "TO_DO" | "DOING" | "DONE";
 }
 
-export interface IData {
+export interface IOption {
   option: string;
 }
 
-export const optionState = atom<IData[]>({
+export const optionState = atom<IOption[]>({
   key: "option",
   default: [],
 });

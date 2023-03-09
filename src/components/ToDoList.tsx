@@ -1,12 +1,6 @@
 import { useForm } from "react-hook-form";
-import {
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from "recoil";
-import { categoryState, IData, optionState, toDoSelector } from "./atom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { categoryState, IOption, optionState, toDoSelector } from "./atom";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 import styled from "styled-components";
@@ -40,7 +34,12 @@ function ToDoList() {
   const filteredToDos = useRecoilValue(toDoSelector);
 
   const onInput = (event: any) => {
-    setCategory(event.currentTarget.value);
+    const {
+      currentTarget: { value },
+    } = event;
+    console.log(event);
+
+    setCategory(value);
   };
   const onValid = ({ option }: any) => {
     setValue("option", "");
@@ -50,7 +49,7 @@ function ToDoList() {
     <Container>
       <H1>To Do Program</H1>
 
-      <Select onInput={onInput}>
+      <Select value={category} onInput={onInput}>
         <option value="TO_DO">TO_DO</option>
         <option value="DOING">DOING</option>
         <option value="DONE">DONE</option>
@@ -58,7 +57,8 @@ function ToDoList() {
           <option value={p.option}>{p.option}</option>
         ))}
       </Select>
-      <form onSubmit={handleSubmit(onValid as any)}>
+
+      <form onSubmit={handleSubmit(onValid)}>
         <input {...register("option")} placeholder="New Category" />
         <button>Create New Category</button>
       </form>
