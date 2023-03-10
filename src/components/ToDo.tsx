@@ -27,7 +27,7 @@ function ToDo({ text, category, id }: IToDo) {
   const category1 = useRecoilValue(categoryState);
   const options = useRecoilValue(optionState);
 
-  const onClick = (event: any) => {
+  const onClick = (event: React.FormEvent<HTMLButtonElement>) => {
     const minji = event.currentTarget.name;
     console.log("value", minji);
     setToDos((prev) => {
@@ -44,7 +44,6 @@ function ToDo({ text, category, id }: IToDo) {
   const onDelete = () => {
     setToDos((prev) => {
       const currentIndex = prev.findIndex((value) => value.id === id);
-      console.log(currentIndex);
       return [...prev.slice(0, currentIndex), ...prev.slice(currentIndex + 1)];
     });
   };

@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { categoryState, IToDo, toDoState } from "./atom";
+import { categoryState, IForm, IToDo, toDoState } from "./atom";
 
 const Input = styled.input`
   padding: 5px 15px;
@@ -27,8 +27,8 @@ const Button = styled.button`
 function CreateToDo() {
   const category = useRecoilValue(categoryState);
   const setToDos = useSetRecoilState(toDoState);
-  const { register, handleSubmit, setValue } = useForm();
-  const handleValid = ({ toDo }: any) => {
+  const { register, handleSubmit, setValue } = useForm<IForm>();
+  const handleValid = ({ toDo }: IForm) => {
     setValue("toDo", "");
     setToDos((prev) => [{ text: toDo, id: Date.now(), category }, ...prev]);
   };

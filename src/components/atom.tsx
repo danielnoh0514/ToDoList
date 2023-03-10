@@ -9,16 +9,21 @@ const { persistAtom } = recoilPersist({
 export interface IToDo {
   text: string;
   id: number;
-  category: "TO_DO" | "DOING" | "DONE";
+  category: string;
 }
 
 export interface IOption {
   option: string;
 }
 
+export interface IForm {
+  toDo: string;
+}
+
 export const optionState = atom<IOption[]>({
   key: "option",
   default: [],
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const toDoState = atom<IToDo[]>({
@@ -27,9 +32,14 @@ export const toDoState = atom<IToDo[]>({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const categoryState = atom<"TO_DO" | "DOING" | "DONE">({
+export interface ICategory {
+  category: string;
+}
+
+export const categoryState = atom({
   key: "Category",
   default: "TO_DO",
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const toDoSelector = selector({
